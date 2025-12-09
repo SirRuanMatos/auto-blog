@@ -10,7 +10,7 @@ COPY backend/tsconfig.json backend/drizzle.config.ts ./
 COPY backend/src ./src
 COPY backend/drizzle ./drizzle
 
-RUN npm run generate && npm run build
+RUN npm run build
 
 FROM public.ecr.aws/docker/library/node:20-alpine
 

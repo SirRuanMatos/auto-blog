@@ -8,6 +8,13 @@
       "when": 1765117579987,
       "tag": "0000_quiet_dazzler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1765305386744,
+      "tag": "0001_thin_nomad",
+      "breakpoints": true
     }
   ]
 }
