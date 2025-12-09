@@ -4,11 +4,11 @@ WORKDIR /app
 
 COPY backend/package*.json backend/pnpm-lock.yaml* ./
 
-RUN npm ci
+RUN npm install
 
 COPY backend/tsconfig.json backend/drizzle.config.ts ./
 COPY backend/src ./src
-COPY backend/drizzle ./drizzle 
+COPY backend/drizzle ./drizzle
 
 RUN npm run generate && npm run build
 
@@ -20,7 +20,8 @@ ENV NODE_ENV=production
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
 COPY backend/package*.json ./
-RUN npm ci --omit=dev
+
+RUN npm install --omit=dev
 
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/drizzle ./drizzle
