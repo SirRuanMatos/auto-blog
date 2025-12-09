@@ -9,7 +9,8 @@
         "start": "node dist/server.js",
         "generate": "drizzle-kit generate",
         "studio": "drizzle-kit studio",
-        "migrate": "node src/db/migrate.ts"
+        "migrate": "node src/db/migrate.ts",
+        "migrate:prod": "node dist/db/migrate.js"
     },
     "dependencies": {
         "@gradio/client": "^2.0.0",
