@@ -4,23 +4,19 @@ WORKDIR /app
 
 COPY frontend/package*.json frontend/pnpm-lock.yaml* ./
 
-RUN npm ci
+RUN npm install
 
 COPY frontend ./
 RUN npm run build
 
-FROM nginx:alpine
+FROM public.ecr.aws/docker/library/nginx:alpine
 
 WORKDIR /usr/share/nginx/html
 
 RUN rm -rf ./*
 COPY --from=build /app/dist ./
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-RUN addgroup -g 101 -S nginx && adduser -S nginx -u 101 && chown -R nginx:nginx /usr/share/nginx/html
-
-USER nginx
+COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
