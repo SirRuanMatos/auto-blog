@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    AWS_REGION: "sa-east-1"
-    ACCOUNT_ID: "123456789012"
+    AWS_REGION: "us-east-1"
+    ACCOUNT_ID: "860655786501"
     BACKEND_REPO_NAME: "autoblog-backend"
     FRONTEND_REPO_NAME: "autoblog-frontend"
 
