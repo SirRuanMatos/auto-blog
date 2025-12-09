@@ -1,0 +1,28 @@
+# Dependências
+node_modules
+pnpm-lock.yaml
+npm-debug.log
+
+# Build output
+dist
+
+# envs
+.env
+
+# Git
+.git
+.gitignore
+
+# IDE / sistema
+.DS_Store
+.vscode
+
+# Testes
+coverage
+
+# Logs
+*.log
+
+# Arquivos da raiz que não devem ir pro build
+../frontend
+../infra

@@ -1,0 +1,48 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "sa-east-1"
+    ACCOUNT_ID: "123456789012"
+    BACKEND_REPO_NAME: "autoblog-backend"
+    FRONTEND_REPO_NAME: "autoblog-frontend"
+
+phases:
+  install:
+    commands:
+    - echo "Instalando Docker daemon..."
+    - nohup /usr/local/bin/dockerd --host=unix:///var/run/docker.sock --host=tcp://127.0.0.1:2375 --storage-driver=overlay2 &
+    - timeout 15 sh -c "until docker info; do echo .; sleep 1; done"
+
+  pre_build:
+    commands:
+    - echo "Fazendo login no ECR..."
+    - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+    - BACKEND_REPOSITORY_URI=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${BACKEND_REPO_NAME}
+    - FRONTEND_REPOSITORY_URI=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${FRONTEND_REPO_NAME}
+
+    - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+    - IMAGE_TAG=${COMMIT_HASH:=latest}
+
+  build:
+    commands:
+    - echo "Build do backend iniciado em $(date)"
+    - docker build -t ${BACKEND_REPOSITORY_URI}:${IMAGE_TAG} -f backend/Dockerfile .
+
+    - echo "Build do frontend iniciado em $(date)"
+    - docker build -t ${FRONTEND_REPOSITORY_URI}:${IMAGE_TAG} -f frontend/Dockerfile .
+
+  post_build:
+    commands:
+    - echo "Fazendo push das imagens para o ECR..."
+    - docker push ${BACKEND_REPOSITORY_URI}:${IMAGE_TAG}
+    - docker push ${FRONTEND_REPOSITORY_URI}:${IMAGE_TAG}
+
+    - echo "Marcando como latest..."
+    - docker tag ${BACKEND_REPOSITORY_URI}:${IMAGE_TAG} ${BACKEND_REPOSITORY_URI}:latest
+    - docker tag ${FRONTEND_REPOSITORY_URI}:${IMAGE_TAG} ${FRONTEND_REPOSITORY_URI}:latest
+    - docker push ${BACKEND_REPOSITORY_URI}:latest
+    - docker push ${FRONTEND_REPOSITORY_URI}:latest
+
+    - echo "Build e push finalizados."
