@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+
+@theme {
+
+    --color-bg-main: #0D0F12;
+    --color-bg-sections: #13161B;
+    --color-bg-containers: #1B1F25;
+    --color-texts-main: #ECEBE7;
+    --color-texts-subtitles: #C7C2BC;
+    --color-texts-meta: #98948F;
+    --color-hovers: #8BA38E;
+    --color-elements: #5C6C60;
+
+    @keyframes slideDownAndFade {
+        0% {
+            opacity: 0;
+            transform: translateY(-2px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @keyframes slideUpAndFade {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+}
