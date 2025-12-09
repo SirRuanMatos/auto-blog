@@ -2,13 +2,13 @@ FROM public.ecr.aws/docker/library/node:20-alpine AS build
 
 WORKDIR /app
 
-COPY package*.json pnpm-lock.yaml* ./
+COPY backend/package*.json backend/pnpm-lock.yaml* ./
 
 RUN npm ci
 
-COPY tsconfig.json drizzle.config.ts ./
-COPY src ./src
-COPY drizzle ./drizzle 2>/dev/null || true
+COPY backend/tsconfig.json backend/drizzle.config.ts ./
+COPY backend/src ./src
+COPY backend/drizzle ./drizzle 
 
 RUN npm run generate && npm run build
 
@@ -19,7 +19,7 @@ ENV NODE_ENV=production
 
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
 
-COPY package*.json ./
+COPY backend/package*.json ./
 RUN npm ci --omit=dev
 
 COPY --from=build /app/dist ./dist

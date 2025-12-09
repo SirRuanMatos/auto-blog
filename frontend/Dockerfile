@@ -2,12 +2,11 @@ FROM public.ecr.aws/docker/library/node:20-alpine AS build
 
 WORKDIR /app
 
-COPY package*.json pnpm-lock.yaml* ./
+COPY frontend/package*.json frontend/pnpm-lock.yaml* ./
 
 RUN npm ci
 
-COPY . .
-
+COPY frontend ./
 RUN npm run build
 
 FROM nginx:alpine
