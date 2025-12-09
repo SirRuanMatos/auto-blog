@@ -1,4 +1,4 @@
-FROM node:20-alpine AS builder
+FROM public.ecr.aws/docker/library/node:20-alpine AS build
 
 WORKDIR /app
 
@@ -17,7 +17,7 @@ RUN npm run generate
 # Compila TypeScript
 RUN npm run build
 
-FROM node:20-alpine
+FROM public.ecr.aws/docker/library/node:20-alpine
 
 WORKDIR /app
 ENV NODE_ENV=production
