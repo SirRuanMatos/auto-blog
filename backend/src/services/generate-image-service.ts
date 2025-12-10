@@ -10,7 +10,7 @@ export const generateImage = async (
     imagePrompt: string
 ): Promise<string | GenericErrorResponse> => {
     try {
-        if (imagePrompt) {
+        if (!imagePrompt) {
             throw new Error("Image prompt is empty");
         }
 
