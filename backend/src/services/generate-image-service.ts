@@ -1,28 +1,33 @@
-import { Client } from "@gradio/client";
 import type { GenericErrorResponse } from "../models";
 import { logError } from "../utils/log-error";
+import { InferenceClient } from "@huggingface/inference";
+import { env } from "../config";
+import { blobToBase64 } from "../utils/blob-to-base64";
+
+const client = new InferenceClient(env.HF_TOKEN);
 
 export const generateImage = async (
     imagePrompt: string
 ): Promise<string | GenericErrorResponse> => {
     try {
-        const client = await Client.connect("Tongyi-MAI/Z-Image-Turbo");
-        const result = await client.predict("/generate", {
-            prompt: imagePrompt,
-            resolution: "1280x720 ( 16:9 )",
-            seed: 42,
-            steps: 8,
-            shift: 3,
-            random_seed: true,
-        });
-        const data: any = result.data;
-        const imageUrl = data[0][0]?.image?.url;
+        if (imagePrompt) {
+            throw new Error("Image prompt is empty");
+        }
 
-        if (!imageUrl) {
+        const result = await client.textToImage({
+            provider: "fal-ai",
+            model: "Tongyi-MAI/Z-Image-Turbo",
+            inputs: imagePrompt,
+            parameters: { num_inference_steps: 5, height: 720, width: 1280 },
+        });
+
+        const base64Image = await blobToBase64(result as unknown as Blob);
+
+        if (!base64Image) {
             throw new Error("No image URL returned from API");
         }
 
-        return imageUrl as string;
+        return base64Image as string;
     } catch (error: any) {
         logError("Error generating image:", error);
 
