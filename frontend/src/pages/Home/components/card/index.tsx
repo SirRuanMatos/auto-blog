@@ -19,6 +19,8 @@ function Card({
                 className="rounded-lg  w-full h-40 mr-8 object-cover xl:w-max"
                 src={`${image}`}
                 alt="Imagem em Base64"
+                loading="lazy"
+                decoding="async"
             />
             <div className="flex flex-col justify-between space-y-4">
                 <h4 className="text-2xl text-texts-main font-medium">
@@ -27,7 +29,9 @@ function Card({
                 <div className="text-texts-subtitles">
                     <p>{description}</p>
                 </div>
-                <p className="text-elements">{dayjs(createdAt).format('DD/MM/YYYY')}</p>
+                <p className="text-elements">
+                    {dayjs(createdAt).format("DD/MM/YYYY")}
+                </p>
             </div>
         </Link>
     );
